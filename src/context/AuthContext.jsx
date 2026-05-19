@@ -11,7 +11,7 @@ export const AuthProvider=({children})=>{
     useEffect(()=>{
         const checkLoggedInUser=async()=>{
             try {
-                const response=await api.get(`${import.meta.env.VITE_API_BASE_URL}/user/current-user`,{withCredentials:true})
+                const response=await api.get(`/user/current-user`,{withCredentials:true})
                 setUser(response.data.data)
             } catch (error) {
                 setUser(null)
