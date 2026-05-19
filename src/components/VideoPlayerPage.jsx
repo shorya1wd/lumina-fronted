@@ -109,8 +109,8 @@ if (!video) return <div className="text-white text-center mt-20">Video not found
             {/* 1. VIDEO PLAYER */}
             <div className="w-full aspect-video bg-black rounded-xl overflow-hidden shadow-2xl">
                 <video 
-                    src={video.videoFile}
-                    poster={video.thumbnail}
+                    src={video.videoFile?.replace('http://', 'https://')}
+                    poster={video.thumbnail?.replace('http://', 'https://')}
                     controls 
                     autoPlay
                     onPlay={handleVideoPlay}
@@ -130,7 +130,7 @@ if (!video) return <div className="text-white text-center mt-20">Video not found
                 <div className="flex items-center gap-4">
                     <Link to={`/channel/${video.ownerDetails?.username}`}>
                         <img 
-                            src={video.ownerDetails?.avatar} 
+                            src={video.ownerDetails?.avatar?.replace('http://', 'https://')} 
                             alt={video.ownerDetails?.username} 
                             className="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover hover:opacity-80 transition-opacity"
                         />
