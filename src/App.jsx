@@ -3,6 +3,9 @@ import {Routes,Route} from "react-router-dom"
 import Home from './pages/Home'
 import Login from './pages/Login'
 import Signup from './pages/Signup'
+import VerifyEmail from './pages/VerifyEmail'
+import ForgotPassword from './pages/ForgotPassword'
+import ResetPassword from './pages/ResetPassword'
 import ProtectedRoute from './components/ProtectedRoute'
 import Settings from './components/Settings'
 import Channel from './components/Channel'
@@ -38,6 +41,9 @@ function App() {
       {/* Without navbar routes */}
       <Route path="/login" element={<Login />}/>
       <Route path='/signup' element={<Signup />}/>
+      <Route path='/verify-email' element={<VerifyEmail />}/>
+      <Route path='/forgot-password' element={<ForgotPassword />}/>
+      <Route path='/reset-password/:token' element={<ResetPassword />}/>
 
 
       {/* Private routes */}

@@ -58,7 +58,7 @@ function VideoDetailModal({onClose,videoId,title,description,onSuccess}) {
                             type="text" 
                             id="title" 
                             required
-                            value={updatedTitle} // Fixed: Bound to state!
+                            value={updatedTitle} 
                             onChange={(e) => setUpdatedTitle(e.target.value)}
                             className="w-full bg-stone-950 border border-stone-800 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-orange-500 transition-colors"
                         />
@@ -71,7 +71,7 @@ function VideoDetailModal({onClose,videoId,title,description,onSuccess}) {
                             id="description" 
                             rows="5"
                             required
-                            value={updatedDescription} // Fixed: Bound to state!
+                            value={updatedDescription} 
                             onChange={(e) => setUpdatedDescription(e.target.value)}
                             className="w-full bg-stone-950 border border-stone-800 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-orange-500 transition-colors resize-none"
                         ></textarea>

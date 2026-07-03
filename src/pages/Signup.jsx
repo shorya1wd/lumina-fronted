@@ -1,6 +1,7 @@
 import React,{ useState} from 'react'
 import axios from 'axios'
 import {useNavigate,Link} from "react-router-dom"
+import { Eye, EyeOff } from 'lucide-react'
 function Signup() {
     const navigate=useNavigate()
 
@@ -18,6 +19,7 @@ function Signup() {
     const [error,setError]=useState(null)
     const [loading,setLoading]=useState(false)
     const [successMessage,setSuccessMessage]=useState(null)
+    const [showPassword, setShowPassword] = useState(false)
 
     const handleChange=(event)=>{
         const {name,value,type,files}=event.target
@@ -61,7 +63,7 @@ function Signup() {
                 password:""
             })
             setTimeout(()=>{
-                navigate("/login")
+                navigate(`/verify-email?email=${encodeURIComponent(formData.email)}`)
             },2000)
         } catch (error) {
             setError(error.response?.data?.message || "Something went wrong")
@@ -111,7 +113,23 @@ function Signup() {
 
                     <div className='flex flex-col'>
                         <label htmlFor="Password" className='text-sm text-stone-300 mb-1'>Password</label>
-                        <input type="password" value={formData.password} onChange={handleChange} name="password" id="" className='rounded-md border border-stone-600 bg-stone-800/50 p-2.5 text-white outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500 transition-colors'/>
+                        <div className="relative">
+                            <input 
+                                type={showPassword ? "text" : "password"} 
+                                value={formData.password} 
+                                onChange={handleChange} 
+                                name="password" 
+                                id="" 
+                                className='w-full rounded-md border border-stone-600 bg-stone-800/50 p-2.5 pr-10 text-white outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500 transition-colors'
+                            />
+                            <button
+                                type="button"
+                                onClick={() => setShowPassword(!showPassword)}
+                                className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-200 transition-colors"
+                            >
+                                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                            </button>
+                        </div>
                     </div>
                     <button className="mt-4 rounded-md bg-linear-to-r from-orange-600 to-rose-600 p-3 font-bold text-white hover:scale-[1.02] transition-transform">
                         Next

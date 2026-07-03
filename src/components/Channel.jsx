@@ -140,7 +140,6 @@ const handleNewVideoUploaded = (newVideo) => {
 
             await api.post(`/subscriptions/s/${channel._id}`);
             
-            // Optimistically update the UI
             setChannel(prev => ({
                 ...prev,
                 isSubscribed: !prev.isSubscribed,

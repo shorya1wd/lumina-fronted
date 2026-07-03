@@ -2,6 +2,7 @@ import React,{useState} from 'react'
 import axios from 'axios'
 import {useNavigate,Link} from "react-router-dom"
 import { useAuth } from '../context/AuthContext.jsx'
+import { Eye, EyeOff } from 'lucide-react'
 function Login() {
     const navigate=useNavigate()
     
@@ -17,6 +18,7 @@ function Login() {
     const [error,setError]=useState(null)
     const [loading,setLoading]=useState(false)
     const [successMessage,setSuccessMessage]=useState(null)
+    const [showPassword, setShowPassword] = useState(false)
 
     const handleChange=(event)=>{
       
@@ -52,7 +54,12 @@ function Login() {
                 navigate("/")
             },2000)
         } catch (error) {
-            setError(error.response?.data?.message || "Invalid credentials")
+            if (error.response?.status === 403) {
+                // Unverified email
+                navigate(`/verify-email?email=${encodeURIComponent(formData.email || formData.username)}`);
+            } else {
+                setError(error.response?.data?.message || "Invalid credentials")
+            }
         }finally{
             setLoading(false)
         }
@@ -86,8 +93,27 @@ function Login() {
                     </div>
 
                     <div className='flex flex-col'>
-                        <label htmlFor="Password" className='text-sm text-stone-300 mb-1'>Password</label>
-                        <input type="password" value={formData.password} onChange={handleChange} name="password" id="" className='rounded-md border border-stone-600 bg-stone-800/50 p-2.5 text-white outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500 transition-colors'/>
+                        <div className="flex justify-between items-center mb-1">
+                            <label htmlFor="Password" className='text-sm text-stone-300'>Password</label>
+                            <Link to="/forgot-password" className="text-xs text-orange-400 hover:text-orange-300 transition-colors">Forgot Password?</Link>
+                        </div>
+                        <div className="relative">
+                            <input 
+                                type={showPassword ? "text" : "password"} 
+                                value={formData.password} 
+                                onChange={handleChange} 
+                                name="password" 
+                                id="" 
+                                className='w-full rounded-md border border-stone-600 bg-stone-800/50 p-2.5 pr-10 text-white outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500 transition-colors'
+                            />
+                            <button
+                                type="button"
+                                onClick={() => setShowPassword(!showPassword)}
+                                className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-200 transition-colors"
+                            >
+                                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                            </button>
+                        </div>
                     </div>
                     <button 
                         type="submit" 
