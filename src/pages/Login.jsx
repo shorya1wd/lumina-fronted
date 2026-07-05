@@ -68,7 +68,7 @@ function Login() {
     <div className='w-full h-screen flex items-center justify-center bg-linear-to-br from-stone-900 via-orange-900 to-orange-950'>
         <div className='flex w-full max-w-5xl min-h-162.5 overflow-hidden rounded-3xl bg-white/10 shadow-2xl backdrop-blur-md'>
 
-            <div className='hidden md:block md:w-1/2 bg-cover bg-center' style={{backgroundImage:"url('/frontpageauth.png')"}}>
+            <div className='hidden md:block md:w-1/2 bg-cover bg-center' style={{backgroundImage:"url('/Front-page-auth.jpg')"}}>
             </div>
 
             <div className='w-full md:w-1/2 bg-black/40 flex flex-col justify-center p-10 lg:p-14'>
