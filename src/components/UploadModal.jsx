@@ -1,6 +1,7 @@
 import {useState} from 'react'
 import api from '../api/axiosInstance'
 import { IoCloseOutline, IoCloudUploadOutline } from "react-icons/io5";
+import toast from 'react-hot-toast';
 
 function UploadModal({onClose,onUploadSuccess}) {
 
@@ -14,7 +15,7 @@ function UploadModal({onClose,onUploadSuccess}) {
         e.preventDefault()
 
         if (!video || !thumbnail || !title || !description) {
-            alert("Please provide a title, video, desciption and thumbnail.");
+            toast.error("Please provide a title, video, description and thumbnail.");
             return;
         }
         setLoading(true)
@@ -30,12 +31,14 @@ function UploadModal({onClose,onUploadSuccess}) {
                     'Content-Type': 'multipart/form-data'
                 }
             })
+            toast.success("Video uploaded successfully!");
             if (onUploadSuccess) {
                 onUploadSuccess(response.data.data); 
             }
             onClose()
         } catch (error) {
             console.log(error)
+            toast.error(error.response?.data?.message || "Failed to upload video");
         }finally{
             setLoading(false)
         }

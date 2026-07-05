@@ -3,6 +3,8 @@ import axios from 'axios'
 import {useNavigate,Link} from "react-router-dom"
 import { useAuth } from '../context/AuthContext.jsx'
 import { Eye, EyeOff } from 'lucide-react'
+import toast from 'react-hot-toast'
+
 function Login() {
     const navigate=useNavigate()
     
@@ -15,9 +17,7 @@ function Login() {
 
     })
 
-    const [error,setError]=useState(null)
     const [loading,setLoading]=useState(false)
-    const [successMessage,setSuccessMessage]=useState(null)
     const [showPassword, setShowPassword] = useState(false)
 
     const handleChange=(event)=>{
@@ -26,17 +26,16 @@ function Login() {
             ...formData,
             [event.target.name] : event.target.value
         })
-        if(error) setError(null)
+        })
     }
 
     const handleSubmit=async(event)=>{
         event.preventDefault()
         
          if ((!formData.email && !formData.username) || !formData.password) {
-            setError("Please provide email or username and password.")
+            toast.error("Please provide email or username and password.")
             return
         }
-        setError(null)
         setLoading(true)
 
         try {
@@ -44,7 +43,7 @@ function Login() {
             const userData=response?.data?.data?.user
             const token=response?.data?.data?.accessToken
             login(userData,token)
-            setSuccessMessage("Welcome to Lumina! Account Logged In")
+            toast.success("Welcome to Lumina! Account Logged In")
             setFormData({
                 email:"",
                 username:"",
@@ -58,7 +57,7 @@ function Login() {
                 // Unverified email
                 navigate(`/verify-email?email=${encodeURIComponent(formData.email || formData.username)}`);
             } else {
-                setError(error.response?.data?.message || "Invalid credentials")
+                toast.error(error.response?.data?.message || "Invalid credentials")
             }
         }finally{
             setLoading(false)
@@ -76,9 +75,6 @@ function Login() {
             <div className='w-full md:w-1/2 bg-black/40 flex flex-col justify-center p-10 lg:p-14'>
 
                 <h1 className='text-4xl p-3 font-extrabold mb-8 uppercase  text-transparent bg-clip-text bg-linear-to-r from-orange-400 via-orange-200 to-orange-500 '>Lumina</h1>
-
-                {error && (<div className="bg-rose-500/10 border border-rose-500 text-rose-200 p-3 rounded-lg text-sm text-center mb-4 animate-pulse">{error}</div>)}
-                {successMessage && (<div className="bg-emerald-500/10 border border-emerald-500 text-emerald-400 p-3 rounded-lg text-sm text-center mb-4">{successMessage}</div>)}
 
                 <form className='flex flex-col gap-4' onSubmit={handleSubmit}>
                   

@@ -2,6 +2,8 @@ import React,{ useState} from 'react'
 import axios from 'axios'
 import {useNavigate,Link} from "react-router-dom"
 import { Eye, EyeOff } from 'lucide-react'
+import toast from 'react-hot-toast'
+
 function Signup() {
     const navigate=useNavigate()
 
@@ -16,9 +18,7 @@ function Signup() {
         coverImage:null
     })
 
-    const [error,setError]=useState(null)
     const [loading,setLoading]=useState(false)
-    const [successMessage,setSuccessMessage]=useState(null)
     const [showPassword, setShowPassword] = useState(false)
 
     const handleChange=(event)=>{
@@ -27,16 +27,15 @@ function Signup() {
             ...formData,
             [name]:type==="file" ? files[0] : value
         })
-        if(error) setError(null)
+        })
     }
 
     const handleNextStep=(event)=>{
         event.preventDefault()
         if (!formData.email || !formData.username || !formData.fullname || !formData.password) {
-            setError("Please fill all the details.")
+            toast.error("Please fill all the details.")
             return
         }
-        setError(null)
         setStep(2)
     }
 
@@ -54,7 +53,7 @@ function Signup() {
 
         try {
             const response=await axios.post(`${import.meta.env.VITE_API_BASE_URL}/user/register`,dataToSend,{headers:{"Content-Type":"multipart/form-data"}})
-            setSuccessMessage("Welcome to Lumina! Account Created")
+            toast.success("Welcome to Lumina! Account Created")
             setStep(1)
             setFormData({
                 email:"",
@@ -66,7 +65,7 @@ function Signup() {
                 navigate(`/verify-email?email=${encodeURIComponent(formData.email)}`)
             },2000)
         } catch (error) {
-            setError(error.response?.data?.message || "Something went wrong")
+            toast.error(error.response?.data?.message || "Something went wrong")
         }finally{
             setLoading(false)
         }
@@ -87,9 +86,6 @@ function Signup() {
                 <p className="text-stone-400 mb-8 text-sm">
                     {step === 1 ? "Create your account" : "Customize your channel"}
                 </p>
-
-                {error && (<div className="bg-rose-500/10 border border-rose-500 text-rose-200 p-3 rounded-lg text-sm text-center mb-4 animate-pulse">{error}</div>)}
-                {successMessage && (<div className="bg-emerald-500/10 border border-emerald-500 text-emerald-400 p-3 rounded-lg text-sm text-center mb-4">{successMessage}</div>)}
 
                 <form className='flex flex-col gap-4' onSubmit={step === 1 ? handleNextStep : handleSubmit}>
 

@@ -1,5 +1,8 @@
 import { useState, useEffect } from 'react';
 import api from "../api/axiosInstance";
+import { formatDistanceToNow } from 'date-fns';
+import { useAuth } from '../context/AuthContext';
+import toast from 'react-hot-toast';
 import { ThumbsUp, Trash2, MessageSquare,Pencil } from 'lucide-react';
 
 
@@ -102,7 +105,7 @@ function ChannelTweets({ userId, currentUserId , userAvatar, userFullName}) {
 
     const handleToggleLike = async (tweetId) => {
         if (!currentUserId) {
-            alert("Please sign in to like posts!");
+            toast.error("Please sign in to like posts!");
             return; 
         }
     setTweets(tweets.map(tweet => {

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import api from '../api/axiosInstance.js';
 import { IoCloseOutline, IoImageOutline } from "react-icons/io5";
+import toast from 'react-hot-toast';
 
 function UpdateThumbnail({ onClose, videoId ,onSuccess}) {
     const [thumbnail, setThumbnail] = useState(null);
@@ -24,7 +25,7 @@ function UpdateThumbnail({ onClose, videoId ,onSuccess}) {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!thumbnail) {
-            alert("Please select a new thumbnail image.");
+            toast.error("Please select a new thumbnail image.");
             return;
         }
 
@@ -41,6 +42,7 @@ function UpdateThumbnail({ onClose, videoId ,onSuccess}) {
             const newThumbnailUrl = response.data.data.thumbnail;
 
             if(newThumbnailUrl){
+                toast.success("Thumbnail updated successfully!");
                 onSuccess(videoId, newThumbnailUrl);
             }
 
@@ -48,7 +50,7 @@ function UpdateThumbnail({ onClose, videoId ,onSuccess}) {
             
         } catch (error) {
             console.error("Failed to update thumbnail:", error);
-            alert("Failed to upload thumbnail. Please try again.");
+            toast.error(error.response?.data?.message || "Failed to upload thumbnail. Please try again.");
         } finally {
             setLoading(false);
         }

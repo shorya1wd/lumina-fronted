@@ -12,6 +12,7 @@ import UpdateThumbnail from "./UpdateThumbnail";
 import { Link } from 'react-router-dom';
 import ChannelTweets from "./ChannelTweets";
 import ChannelPlaylist from './ChannelPlaylist'
+import toast from 'react-hot-toast';
 
 function Channel(){
     const {username}=useParams()
@@ -69,12 +70,12 @@ function Channel(){
         await api.delete(`/videos/${videoId}`); 
         
         setVideo((prevVideos) => prevVideos.filter((vid) => vid._id !== videoId));
-        
         setOpenMenuId(null);
+        toast.success("Video deleted successfully!");
         
     } catch (error) {
         console.error("Failed to delete video:", error);
-        alert("Something went wrong while trying to delete the video.");
+        toast.error("Something went wrong while trying to delete the video.");
     }
 };
 
@@ -155,7 +156,6 @@ const handleNewVideoUploaded = (newVideo) => {
 
     useEffect(() => {
         const handleClickOutside = (event) => {
-        
             if (menuRef.current && !menuRef.current.contains(event.target)) {
                 setIsMenuOpen(false); 
             }
@@ -165,11 +165,27 @@ const handleNewVideoUploaded = (newVideo) => {
             document.addEventListener('mousedown', handleClickOutside);
         }
 
-    
         return () => {
             document.removeEventListener('mousedown', handleClickOutside);
         };
     }, [isMenuOpen]);
+
+    // Click outside listener for the 3-dot video menu
+    useEffect(() => {
+        const handleVideoMenuClickOutside = (event) => {
+            if (!event.target.closest('.video-menu-container')) {
+                setOpenMenuId(null);
+            }
+        };
+        
+        if (openMenuId) {
+            document.addEventListener('mousedown', handleVideoMenuClickOutside);
+        }
+
+        return () => {
+            document.removeEventListener('mousedown', handleVideoMenuClickOutside);
+        };
+    }, [openMenuId]);
 
     if(loading){
         return(
@@ -341,7 +357,7 @@ const handleNewVideoUploaded = (newVideo) => {
                                                 <p className="text-stone-500 text-xs mb-2">{vid.views} views • {new Date(vid.createdAt).toLocaleDateString()}</p>
                                                 
                                                 {isOwnProfile && (
-                                                    <div className="absolute top-0 right-0" >
+                                                    <div className="absolute top-0 right-0 video-menu-container" >
                                                         <button 
                                                             onClick={() => setOpenMenuId(openMenuId === vid._id ? null : vid._id)}
                                                             className="p-1.5 text-stone-400 hover:text-white rounded-full hover:bg-stone-800 transition-colors"
@@ -351,15 +367,7 @@ const handleNewVideoUploaded = (newVideo) => {
 
                                                         {openMenuId === vid._id && (
                                                             <>
-                                                            <div 
-                                                                    className="fixed inset-0 z-40" 
-                                                                    onClick={(e) => {
-                                                                        e.preventDefault();
-                                                                        e.stopPropagation();
-                                                                        setOpenMenuId(null);
-                                                                    }}
-                                                                ></div>
-                                                            <div className="absolute right-0 mt-1 w-48 bg-stone-900 border border-stone-800 rounded-xl shadow-2xl z-50 overflow-hidden">
+                                                            <div className="absolute right-0 bottom-full mb-1 w-48 bg-stone-900 border border-stone-800 rounded-xl shadow-2xl z-50 overflow-hidden">
                                                                 <button 
                                                                     onClick={() => { setPublishingVideoId(vid._id); setOpenMenuId(null); }}
                                                                     className="w-full text-left px-4 py-3 text-sm font-medium text-stone-300 hover:bg-stone-800 hover:text-white transition-colors border-b border-stone-800/50"

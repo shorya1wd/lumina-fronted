@@ -1,4 +1,5 @@
 import './App.css'
+import { Toaster } from 'react-hot-toast';
 import {Routes,Route} from "react-router-dom"
 import Home from './pages/Home'
 import Login from './pages/Login'
@@ -21,7 +22,16 @@ function App() {
 
   return (
     <div className='bg-stone-950 min-h-screen'>
-
+      <Toaster 
+        position="bottom-center"
+        toastOptions={{
+          style: {
+            background: '#333',
+            color: '#fff',
+            borderRadius: '10px',
+          },
+        }}
+      />
     <Routes>
       {/* Public routes */}
 

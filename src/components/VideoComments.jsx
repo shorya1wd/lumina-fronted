@@ -2,8 +2,9 @@ import { useState, useEffect } from 'react';
 import api from "../api/axiosInstance";
 import { ThumbsUp, Trash2, Pencil, MoreVertical } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import toast from 'react-hot-toast';
 
-function VideoComments({ videoId, currentUserId, currentUserAvatar, currentUserFullName, currentUsername }) {
+function VideoComments({ videoId, currentUserId, currentUserAvatar, currentUserFullName, currentUsername, videoOwnerId }) {
     const [comments, setComments] = useState([]);
     const [loading, setLoading] = useState(true);
     
@@ -93,7 +94,7 @@ function VideoComments({ videoId, currentUserId, currentUserAvatar, currentUserF
 
     const handleToggleLike = async (commentId) => {
          if (!currentUserId) {
-            alert("Please sign in to like posts!");
+            toast.error("Please sign in to like posts!");
             return; 
         }
         
@@ -221,15 +222,17 @@ function VideoComments({ videoId, currentUserId, currentUserAvatar, currentUserF
                                                 <span className="text-xs font-medium">{comment.likesCount || 0}</span>
                                             </button>
                                             
-                                            {String(currentUserId) === String(comment.owner) && (
-                                                <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                                    <button 
-                                                        onClick={() => triggerEditMode(comment._id, comment.content)}
-                                                        className="text-stone-500 hover:text-white p-1.5 rounded-full hover:bg-stone-800 transition-colors"
-                                                        title="Edit comment"
-                                                    >
-                                                        <Pencil size={14} />
-                                                    </button>
+                                            {(String(currentUserId) === String(comment.owner) || String(currentUserId) === String(videoOwnerId)) && (
+                                                <div className="flex items-center gap-2 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
+                                                    {String(currentUserId) === String(comment.owner) && (
+                                                        <button 
+                                                            onClick={() => triggerEditMode(comment._id, comment.content)}
+                                                            className="text-stone-500 hover:text-white p-1.5 rounded-full hover:bg-stone-800 transition-colors"
+                                                            title="Edit comment"
+                                                        >
+                                                            <Pencil size={14} />
+                                                        </button>
+                                                    )}
                                                     <button 
                                                         onClick={() => handleDeleteComment(comment._id)}
                                                         className="text-stone-500 hover:text-red-500 p-1.5 rounded-full hover:bg-stone-800 transition-colors"

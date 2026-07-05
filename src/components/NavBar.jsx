@@ -1,4 +1,4 @@
-import {useState} from "react"
+import {useState, useEffect, useRef} from "react"
 import api from "../api/axiosInstance"
 import { useNavigate ,Link} from "react-router-dom"
 import { useAuth } from "../context/AuthContext"
@@ -13,6 +13,21 @@ function NavBar({toggleSidebar}){
     const [isMenuOpen,setIsMenuOpen]=useState(false)
     const [searchQuery,setSearchQuery]=useState("")
     const [isSubscribersModalOpen, setIsSubscribersModalOpen] = useState(false);
+    const menuRef = useRef(null);
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (menuRef.current && !menuRef.current.contains(event.target)) {
+                setIsMenuOpen(false);
+            }
+        };
+        if (isMenuOpen) {
+            document.addEventListener('mousedown', handleClickOutside);
+        }
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [isMenuOpen]);
 
     const handleLogout=async()=>{
         try {
@@ -93,7 +108,7 @@ function NavBar({toggleSidebar}){
 
                 {user ? (
 
-                    <div className="relative">
+                    <div className="relative" ref={menuRef}>
                         <button onClick={()=>setIsMenuOpen(!isMenuOpen)} className="flex items-center gap-3 p-1.5 pr-3 pl-3 rounded-3xl focus:outline-none hover:bg-stone-800 border border-transparent hover:border-stone-600 transition-all duration-200"> 
                             <p className="text-stone-200 font-medium text-sm">{user.username}</p>
                             <img src={user.avatar} alt="Profile" className="w-9 h-9 rounded-full shadow-sm object-cover"/>

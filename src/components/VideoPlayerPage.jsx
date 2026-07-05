@@ -7,6 +7,7 @@ import { useAuth } from "../context/AuthContext";
 import { ThumbsUp } from 'lucide-react';
 import SaveToPlaylistModal from '../components/SaveToPlaylistModal'; 
 import { ListPlus } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 function VideoPlayerPage() {
   const { user: currentUser } = useAuth();
@@ -76,7 +77,7 @@ function VideoPlayerPage() {
 
       const handleToggleLike = async (videoId) => {
          if (!currentUser) {
-            alert("Please sign in to like posts!");
+            toast.error("Please sign in to like videos!");
             return; 
         }
       setVideo(prev => {
@@ -207,6 +208,7 @@ if (!video) return <div className="text-white text-center mt-20">Video not found
                         currentUserAvatar={currentUser?.avatar}
                         currentUserFullName={currentUser?.fullname}
                         currentUsername={currentUser?.username}
+                        videoOwnerId={video.ownerDetails?._id}
                     />
                 </div>
             </div>
