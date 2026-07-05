@@ -27,7 +27,6 @@ function Signup() {
             ...formData,
             [name]:type==="file" ? files[0] : value
         })
-        })
     }
 
     const handleNextStep=(event)=>{

@@ -26,7 +26,6 @@ function Login() {
             ...formData,
             [event.target.name] : event.target.value
         })
-        })
     }
 
     const handleSubmit=async(event)=>{
