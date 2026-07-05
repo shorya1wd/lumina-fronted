@@ -68,7 +68,7 @@ function Login() {
     <div className='w-full h-screen flex items-center justify-center bg-linear-to-br from-stone-900 via-orange-900 to-orange-950'>
         <div className='flex w-full max-w-5xl min-h-162.5 overflow-hidden rounded-3xl bg-white/10 shadow-2xl backdrop-blur-md'>
 
-            <div className='hidden md:block md:w-1/2 bg-cover bg-center' style={{backgroundImage:"url('https://res.cloudinary.com/dktrehxcq/image/upload/q_auto/f_auto/v1778520328/pexels-marek-piwnicki-3907296-8991554_aux5fv.jpg')"}}>
+            <div className='hidden md:block md:w-1/2 bg-cover bg-center' style={{backgroundImage:"url('/User_CoverImage.png')"}}>
             </div>
 
             <div className='w-full md:w-1/2 bg-black/40 flex flex-col justify-center p-10 lg:p-14'>

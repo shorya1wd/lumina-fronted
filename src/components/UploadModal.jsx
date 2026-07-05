@@ -9,7 +9,22 @@ function UploadModal({onClose,onUploadSuccess}) {
     const [video,setVideo]=useState(null)
     const [title,setTitle]=useState("")
     const [description,setDescription]=useState("")
+    const [duration, setDuration] = useState(0)
     const [loading,setLoading]=useState(false)
+
+    const handleVideoChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setVideo(file);
+            const videoElement = document.createElement('video');
+            videoElement.preload = 'metadata';
+            videoElement.onloadedmetadata = () => {
+                window.URL.revokeObjectURL(videoElement.src);
+                setDuration(Math.round(videoElement.duration));
+            }
+            videoElement.src = URL.createObjectURL(file);
+        }
+    }
 
     const handleUpload = async(e) => {
         e.preventDefault()
@@ -24,6 +39,7 @@ function UploadModal({onClose,onUploadSuccess}) {
         formData.append("videoFile",video)
         formData.append("title",title)
         formData.append("description",description)
+        formData.append("duration", duration)
 
         try {
             const response=await api.post("/videos", formData, {
@@ -78,7 +94,7 @@ function UploadModal({onClose,onUploadSuccess}) {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <div className="bg-stone-950 border border-dashed border-stone-700 rounded-xl p-4 text-center">
                 <label htmlFor="video" className="block text-sm font-medium text-stone-300 mb-2">Video</label>
-                <input type="file" name="video" accept='video/*' required onChange={(e)=>setVideo(e.target.files[0])} className="text-sm text-stone-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-stone-800 file:text-stone-300 hover:file:bg-stone-700 transition-all w-full"/>
+                <input type="file" name="video" accept='video/*' required onChange={handleVideoChange} className="text-sm text-stone-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-stone-800 file:text-stone-300 hover:file:bg-stone-700 transition-all w-full"/>
             </div>
             <div>
                 <label htmlFor="thumbnail" className="block text-sm font-medium text-stone-300 mb-2">Thumbnail</label>

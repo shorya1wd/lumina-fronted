@@ -7,6 +7,7 @@ function Home() {
 
   const [videos,setVideos]=useState([])
   const [loading,setLoading]=useState(true)
+  const [sortOption, setSortOption] = useState('latest')
 
   const [searchParams] = useSearchParams()
   const searchQuery = searchParams.get('query') || ""
@@ -18,8 +19,8 @@ function Home() {
         const response=await api.get("/videos/",{
           params:{
             query:searchQuery,
-            sortBy:"createdAt",
-            sortType:"desc"
+            sortBy: sortOption === 'popular' ? 'views' : 'createdAt',
+            sortType: sortOption === 'oldest' ? 'asc' : 'desc'
           }
         })
         setVideos(response.data.data.docs || [])
@@ -31,7 +32,7 @@ function Home() {
       }
     }
     fetchVideos()
-  },[searchQuery])
+  },[searchQuery, sortOption])
 
   if (loading) return (
         <div className="h-screen bg-stone-950 flex items-center justify-center">
@@ -41,6 +42,26 @@ function Home() {
 
   return (
     <div className='min-h-screen bg-stone-900 text-white p-8'>
+        <div className="flex gap-4 mb-6">
+          <button 
+            onClick={() => setSortOption('latest')} 
+            className={`px-4 py-1.5 rounded-full text-sm font-semibold transition-colors ${sortOption === 'latest' ? 'bg-white text-black' : 'bg-stone-800 text-stone-300 hover:bg-stone-700'}`}
+          >
+            Latest
+          </button>
+          <button 
+            onClick={() => setSortOption('popular')} 
+            className={`px-4 py-1.5 rounded-full text-sm font-semibold transition-colors ${sortOption === 'popular' ? 'bg-white text-black' : 'bg-stone-800 text-stone-300 hover:bg-stone-700'}`}
+          >
+            Popular
+          </button>
+          <button 
+            onClick={() => setSortOption('oldest')} 
+            className={`px-4 py-1.5 rounded-full text-sm font-semibold transition-colors ${sortOption === 'oldest' ? 'bg-white text-black' : 'bg-stone-800 text-stone-300 hover:bg-stone-700'}`}
+          >
+            Oldest
+          </button>
+        </div>
         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 '>
 
           {videos.map((video)=>(
